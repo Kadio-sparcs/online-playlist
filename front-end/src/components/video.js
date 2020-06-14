@@ -162,7 +162,7 @@ export default class Video extends Component {
                   type="text"
                   className="form-control"
                   id="video"
-                  src={currentVideo.video}
+                  value={currentVideo.video}
                   onChange={this.onChangeVideo}
                 ></input>
               </div>
@@ -170,7 +170,7 @@ export default class Video extends Component {
               <div className="form-group">
                 <label>
                   <strong>Status:</strong>
-                </label>
+                </label>{" "}
                 {currentVideo.published ? "Published" : "Pending"}
               </div>
             </form>
