@@ -3,7 +3,7 @@ module.exports = mongoose => {
         {
             title: String,
             description: String,
-            tutorial: String,
+            video: String,
             published: Boolean
         },
         { timestamps: true }
@@ -15,6 +15,6 @@ module.exports = mongoose => {
         return object;
     });
 
-    const Tutorial = mongoose.model("tutorial", schema);
-    return Tutorial;
+    const Video = mongoose.model("video", schema);
+    return Video;
 };

@@ -1,23 +1,23 @@
 import React, { Component } from "react";
-import TutorialDataService from "../services/tutorial.service";
+import VideoDataService from "../services/service";
 
-export default class Tutorial extends Component {
+export default class Video extends Component {
   constructor(props) {
     super(props);
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
-    this.onChangeTutorial = this.onChangeTutorial.bind(this);
-    this.getTutorial = this.getTutorial.bind(this);
+    this.onChangeVideo = this.onChangeVideo.bind(this);
+    this.getVideo = this.getVideo.bind(this);
     this.updatePublished = this.updatePublished.bind(this);
-    this.updateTutorial = this.updateTutorial.bind(this);
-    this.deleteTutorial = this.deleteTutorial.bind(this);
+    this.updateVideo = this.updateVideo.bind(this);
+    this.deleteVideo = this.deleteVideo.bind(this);
 
     this.state = {
-      currentTutorial: {
+      currentVideo: {
         id: null,
         title: "",
         description: "",
-        tutorial: "",
+        video: "",
         published: false
       },
       message: ""
@@ -25,7 +25,7 @@ export default class Tutorial extends Component {
   }
 
   componentDidMount() {
-    this.getTutorial(this.props.match.params.id);
+    this.getVideo(this.props.match.params.id);
   }
 
   onChangeTitle(e) {
@@ -33,8 +33,8 @@ export default class Tutorial extends Component {
 
     this.setState(function(prevState) {
       return {
-        currentTutorial: {
-          ...prevState.currentTutorial,
+        currentVideo: {
+          ...prevState.currentVideo,
           title: title
         }
       };
@@ -45,29 +45,29 @@ export default class Tutorial extends Component {
     const description = e.target.value;
     
     this.setState(prevState => ({
-      currentTutorial: {
-        ...prevState.currentTutorial,
+      currentVideo: {
+        ...prevState.currentVideo,
         description: description
       }
     }));
   }
 
-  onChangeTutorial(e) {
-    const tutorial = e.target.value;
+  onChangeVideo(e) {
+    const video = e.target.value;
     
     this.setState(prevState => ({
-      currentTutorial: {
-        ...prevState.currentTutorial,
-        tutorial: tutorial
+      currentVideo: {
+        ...prevState.currentVideo,
+        video: video
       }
     }));
   }
 
-  getTutorial(id) {
-    TutorialDataService.get(id)
+  getVideo(id) {
+    VideoDataService.get(id)
       .then(response => {
         this.setState({
-          currentTutorial: response.data
+          currentVideo: response.data
         });
         console.log(response.data);
       })
@@ -78,18 +78,18 @@ export default class Tutorial extends Component {
 
   updatePublished(status) {
     var data = {
-      id: this.state.currentTutorial.id,
-      title: this.state.currentTutorial.title,
-      tutorial: this.state.currentTutorial.tutorial,
-      description: this.state.currentTutorial.description,
+      id: this.state.currentVideo.id,
+      title: this.state.currentVideo.title,
+      video: this.state.currentVideo.video,
+      description: this.state.currentVideo.description,
       published: status
     };
 
-    TutorialDataService.update(this.state.currentTutorial.id, data)
+    VideoDataService.update(this.state.currentVideo.id, data)
       .then(response => {
         this.setState(prevState => ({
-          currentTutorial: {
-            ...prevState.currentTutorial,
+          currentVideo: {
+            ...prevState.currentVideo,
             published: status
           }
         }));
@@ -100,15 +100,15 @@ export default class Tutorial extends Component {
       });
   }
 
-  updateTutorial() {
-    TutorialDataService.update(
-      this.state.currentTutorial.id,
-      this.state.currentTutorial
+  updateVideo() {
+    VideoDataService.update(
+      this.state.currentVideo.id,
+      this.state.currentVideo
     )
       .then(response => {
         console.log(response.data);
         this.setState({
-          message: "The tutorial was updated successfully!"
+          message: "The video was updated successfully!"
         });
       })
       .catch(e => {
@@ -116,11 +116,11 @@ export default class Tutorial extends Component {
       });
   }
 
-  deleteTutorial() {    
-    TutorialDataService.delete(this.state.currentTutorial.id)
+  deleteVideo() {    
+    VideoDataService.delete(this.state.currentVideo.id)
       .then(response => {
         console.log(response.data);
-        this.props.history.push('/tutorials')
+        this.props.history.push('/videos')
       })
       .catch(e => {
         console.log(e);
@@ -128,13 +128,13 @@ export default class Tutorial extends Component {
   }
 
   render() {
-    const { currentTutorial } = this.state;
+    const { currentVideo } = this.state;
 
     return (
       <div>
-        {currentTutorial ? (
+        {currentVideo ? (
           <div className="edit-form">
-            <h4>Tutorial</h4>
+            <h4>Video</h4>
             <form>
               <div className="form-group">
                 <label htmlFor="title">Title</label>
@@ -142,7 +142,7 @@ export default class Tutorial extends Component {
                   type="text"
                   className="form-control"
                   id="title"
-                  value={currentTutorial.title}
+                  value={currentVideo.title}
                   onChange={this.onChangeTitle}
                 />
               </div>
@@ -152,18 +152,18 @@ export default class Tutorial extends Component {
                   type="text"
                   className="form-control"
                   id="description"
-                  value={currentTutorial.description}
+                  value={currentVideo.description}
                   onChange={this.onChangeDescription}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="tutorial">Tutorial URL</label>
+                <label htmlFor="video">Video URL</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="tutorial"
-                  src={currentTutorial.tutorial}
-                  onChange={this.onChangeTutorial}
+                  id="video"
+                  src={currentVideo.video}
+                  onChange={this.onChangeVideo}
                 ></input>
               </div>
 
@@ -171,11 +171,11 @@ export default class Tutorial extends Component {
                 <label>
                   <strong>Status:</strong>
                 </label>
-                {currentTutorial.published ? "Published" : "Pending"}
+                {currentVideo.published ? "Published" : "Pending"}
               </div>
             </form>
 
-            {currentTutorial.published ? (
+            {currentVideo.published ? (
               <button
                 className="badge badge-primary mr-2"
                 onClick={() => this.updatePublished(false)}
@@ -193,7 +193,7 @@ export default class Tutorial extends Component {
 
             <button
               className="badge badge-danger mr-2"
-              onClick={this.deleteTutorial}
+              onClick={this.deleteVideo}
             >
               Delete
             </button>
@@ -201,7 +201,7 @@ export default class Tutorial extends Component {
             <button
               type="submit"
               className="badge badge-success"
-              onClick={this.updateTutorial}
+              onClick={this.updateVideo}
             >
               Update
             </button>
@@ -210,7 +210,7 @@ export default class Tutorial extends Component {
         ) : (
           <div>
             <br />
-            <p>Please click on a tutorial...</p>
+            <p>Please click on a video...</p>
           </div>
         )}
       </div>

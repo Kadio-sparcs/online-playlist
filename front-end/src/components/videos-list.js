@@ -1,27 +1,27 @@
 import React, { Component } from "react";
-import TutorialDataService from "../services/tutorial.service";
+import VideoDataService from "../services/service";
 import { Link } from "react-router-dom";
 
-export default class TutorialsList extends Component {
+export default class VideosList extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
-    this.retrieveTutorials = this.retrieveTutorials.bind(this);
+    this.retrieveVideos = this.retrieveVideos.bind(this);
     this.refreshList = this.refreshList.bind(this);
-    this.setActiveTutorial = this.setActiveTutorial.bind(this);
-    this.removeAllTutorials = this.removeAllTutorials.bind(this);
+    this.setActiveVideo = this.setActiveVideo.bind(this);
+    this.removeAllVideos = this.removeAllVideos.bind(this);
     this.searchTitle = this.searchTitle.bind(this);
 
     this.state = {
-      tutorials: [],
-      currentTutorial: null,
+      videos: [],
+      currentVideo: null,
       currentIndex: -1,
       searchTitle: ""
     };
   }
 
   componentDidMount() {
-    this.retrieveTutorials();
+    this.retrieveVideos();
   }
 
   onChangeSearchTitle(e) {
@@ -32,11 +32,11 @@ export default class TutorialsList extends Component {
     });
   }
 
-  retrieveTutorials() {
-    TutorialDataService.getAll()
+  retrieveVideos() {
+    VideoDataService.getAll()
       .then(response => {
         this.setState({
-          tutorials: response.data
+          videos: response.data
         });
         console.log(response.data);
       })
@@ -46,22 +46,22 @@ export default class TutorialsList extends Component {
   }
 
   refreshList() {
-    this.retrieveTutorials();
+    this.retrieveVideos();
     this.setState({
-      currentTutorial: null,
+      currentVideo: null,
       currentIndex: -1
     });
   }
 
-  setActiveTutorial(tutorial, index) {
+  setActiveVideo(video, index) {
     this.setState({
-      currentTutorial: tutorial,
+      currentVideo: video,
       currentIndex: index
     });
   }
 
-  removeAllTutorials() {
-    TutorialDataService.deleteAll()
+  removeAllVideos() {
+    VideoDataService.deleteAll()
       .then(response => {
         console.log(response.data);
         this.refreshList();
@@ -72,10 +72,10 @@ export default class TutorialsList extends Component {
   }
 
   searchTitle() {
-    TutorialDataService.findByTitle(this.state.searchTitle)
+    VideoDataService.findByTitle(this.state.searchTitle)
       .then(response => {
         this.setState({
-          tutorials: response.data
+          videos: response.data
         });
         console.log(response.data);
       })
@@ -85,7 +85,7 @@ export default class TutorialsList extends Component {
   }
 
   render() {
-    const { searchTitle, tutorials, currentTutorial, currentIndex } = this.state;
+    const { searchTitle, videos, currentVideo, currentIndex } = this.state;
 
     return (
       <div className="list row">
@@ -110,63 +110,63 @@ export default class TutorialsList extends Component {
           </div>
         </div>
         <div className="col-md-4">
-          <h4>Tutorial List</h4>
+          <h4>Video List</h4>
 
           <ul className="list-group">
-            {tutorials &&
-              tutorials.map((tutorial, index) => (
+            {videos &&
+              videos.map((video, index) => (
                 <li
                   className={
                     "list-group-item " +
                     (index === currentIndex ? "active" : "")
                   }
-                  onClick={() => this.setActiveTutorial(tutorial, index)}
+                  onClick={() => this.setActiveVideo(video, index)}
                   key={index}
                 >
-                  {tutorial.title}
+                  {video.title}
                 </li>
               ))}
           </ul>
 
           <button
             className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllTutorials}
+            onClick={this.removeAllVideos}
           >
             Remove All
           </button>
         </div>
         <div className="col-md-8">
-          {currentTutorial ? (
+          {currentVideo ? (
             <div>
-              <h4>Tutorial</h4>
+              <h4>Video</h4>
               <div>
                 <label>
                   <strong>Title:</strong>
                 </label>{" "}
-                {currentTutorial.title}
+                {currentVideo.title}
               </div>
               <div>
                 <label>
                   <strong>Description:</strong>
                 </label>{" "}
-                {currentTutorial.description}
+                {currentVideo.description}
               </div>
               <div>
                 <label>
-                  <strong>Tutorial URL:</strong>
+                  <strong>Video URL:</strong>
                 </label>{" "}
-                <a href={currentTutorial.tutorial}>{currentTutorial.tutorial}</a>
-                <iframe title={currentTutorial.title} width="560" height="315" src={"https://www.youtube.com/embed/" + currentTutorial.tutorial.split('=')[1]} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                <a href={currentVideo.video}>{currentVideo.video}</a>
+                <iframe title={currentVideo.title} width="560" height="315" src={"https://www.youtube.com/embed/" + currentVideo.video.split('=')[1]} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
               </div>
               <div>
                 <label>
                   <strong>Status:</strong>
                 </label>{" "}
-                {currentTutorial.published ? "Published" : "Pending"}
+                {currentVideo.published ? "Published" : "Pending"}
               </div>
 
               <Link
-                to={"/tutorials/" + currentTutorial.id}
+                to={"/videos/" + currentVideo.id}
                 className="badge badge-warning"
               >
                 Edit
@@ -175,7 +175,7 @@ export default class TutorialsList extends Component {
           ) : (
             <div>
               <br />
-              <p>Please click on a Tutorial...</p>
+              <p>Please click on a Video...</p>
             </div>
           )}
         </div>
